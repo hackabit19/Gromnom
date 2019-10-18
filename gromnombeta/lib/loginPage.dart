@@ -12,9 +12,17 @@ class LoginPage extends StatefulWidget {
   State<StatefulWidget> createState() => new _LoginPageState();
 }
 
+/*
+ Creating a new enumeration.
+ Add new piece of state to tell if: 
+ • The user is logging in or,
+ • Creating a new account.
+ */
 
 enum FormType { login, register }
 
+/*Underscores (_) are used to modify access to "private" 
+i.e. not accessible from different files*/
 
 enum AuthStatus { notSignedIn, signedIn }
 
@@ -28,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    //This method checks  the status of the user when we initially start the app
     widget.auth.currentUser().then((userId)
         //This is same as -
         // userId = await widget.auth.currentUser()
@@ -49,7 +58,20 @@ class _LoginPageState extends State<LoginPage> {
       print("login should work");
     });
 
-  
+    Firestore.instance
+        .collection("users")
+        .where('uid', isEqualTo: user.uid)
+        .getDocuments()
+        .then((QuerySnapshot docs) {
+      if (docs.documents.isNotEmpty) {
+        print("Old user");
+        print('${user.uid}');
+        print('${docs.documents[0].data}');
+      } else {
+        print("New User");
+        Firestore.instance.collection('users').add({'email': user.email, 'uid': user.uid, 'membersince': DateTime.now()});
+      }
+    });
   }
 
   void _signedOut() {
@@ -106,7 +128,12 @@ class _LoginPageState extends State<LoginPage> {
     await AuthStatus.signedIn;
   }
 
+  Future<String> loginWithGoogle() async {
+    user = await widget.auth.signInWithGoogle();
+    if (user != null) _signedIn();
 
+    print('Registered user: $user');
+  }
 
   void moveToRegister() {
     _formKey.currentState.reset();
@@ -127,6 +154,9 @@ class _LoginPageState extends State<LoginPage> {
     return [
       new SizedBox(
         height: 140,
+      ),
+      new SizedBox(
+        height: 20,
       ),
       new Center(
         child: Hero(
@@ -189,6 +219,15 @@ class _LoginPageState extends State<LoginPage> {
         new SizedBox(
           height: 10,
         ),
+        Material(
+          color: Colors.yellow[600],
+          borderRadius: BorderRadius.circular(25),
+          child: new MaterialButton(
+            child: new Text('Login with Google'),
+            onPressed: loginWithGoogle,
+            elevation: 6,
+          ),
+        )
       ];
     } else if (_formType == FormType.register) {
       return [
@@ -250,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                 if (snapshot.hasError)
                   return new Text('Error: ${snapshot.error}');
                 else
-                  return BuildApp();
+                  return BuildApp(widget.auth, _signedOut, user);
             }
           },
         );
