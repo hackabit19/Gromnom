@@ -265,13 +265,30 @@ class _LoginPageState extends State<LoginPage> {
         )
       ];
     } else if (_formType == FormType.register) {
-      return [
-        new RaisedButton(
-          child: new Text('Create an account'),
+      return [Material(
+          color: Color(0xffEAB543),
+          borderRadius: BorderRadius.circular(25),
+          child: new
+          MaterialButton(
+          child: new Text(
+            'Create an Account',
+               style: TextStyle(
+                            color: Color(0xfff5f5f5),
+                            fontSize: 18,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w500,
+                          ),
+              ),
           onPressed: validateAndSubmit, //calls a function validateAndSave
         ),
+        ),
         new FlatButton(
-          child: new Text('Already have an account? Login'),
+          child: new Text(
+            'Already have an account? Login',
+            style: TextStyle(
+                            color: Color(0xff7f8c8d)
+                            )
+                            ),
           onPressed: moveToLogin,
         )
       ];
