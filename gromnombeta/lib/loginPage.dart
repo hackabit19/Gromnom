@@ -161,8 +161,11 @@ class _LoginPageState extends State<LoginPage> {
       new Center(
         child: Hero(
           child: Text(
-            "GROMNOM",
-            style: TextStyle(),
+            " Welcome to Gromnom",
+            style: TextStyle(
+              fontSize: 30,
+            ),
+            
           ),
           tag: 'title',
         ),
