@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'buildApp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage(this.auth);
@@ -153,23 +154,30 @@ class _LoginPageState extends State<LoginPage> {
   List<Widget> title() {
     return [
       new SizedBox(
-        height: 140,
-      ),
-      new SizedBox(
-        height: 20,
+        height: 150,
       ),
       new Center(
-        child: Hero(
-          child: Text(
-            " Welcome to Gromnom",
-            style: TextStyle(
-              fontSize: 30,
-            ),
-            
-          ),
-          tag: 'title',
-        ),
-      ),
+          child: Column(
+                      children:<Widget>[
+                        Text(
+                          " Welcome to",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        Text(
+                          "Gromnom",
+                          style: TextStyle(
+                            color: Color(0xffEAB543),
+                            fontSize: 45,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )],
+                        ),
+                  ),
       new SizedBox(
         height: 40,
       ),
@@ -200,9 +208,17 @@ class _LoginPageState extends State<LoginPage> {
       return [
         Material(
           borderRadius: BorderRadius.circular(25),
-          color: Colors.yellow[600],
+          color: Color(0xffEAB543),
           child: new MaterialButton(
-            child: new Text('Login'),
+            child: new Text(
+              'Login',
+               style: TextStyle(
+                            color: Color(0xfff5f5f5),
+                            fontSize: 18,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w500,
+                          ),
+              ),
             elevation: 6,
             onPressed: validateAndSubmit, //calls a function validateAndSave
           ),
@@ -211,10 +227,18 @@ class _LoginPageState extends State<LoginPage> {
           height: 10,
         ),
         Material(
-          color: Colors.yellow[600],
+          color: Color(0xffEAB543),
           borderRadius: BorderRadius.circular(25),
           child: new MaterialButton(
-            child: new Text('Create an Account'),
+            child: new Text(
+              'Create an Account',
+               style: TextStyle(
+                            color: Color(0xfff5f5f5),
+                            fontSize: 18,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w500,
+                          ),
+              ),
             onPressed: moveToRegister,
             elevation: 6,
           ),
@@ -222,13 +246,21 @@ class _LoginPageState extends State<LoginPage> {
         new SizedBox(
           height: 10,
         ),
-        Material(
-          color: Colors.yellow[600],
-          borderRadius: BorderRadius.circular(25),
-          child: new MaterialButton(
-            child: new Text('Login with Google'),
+        Container(
+          height: 45,
+          decoration: BoxDecoration(
+            boxShadow: [
+            new BoxShadow(
+              color: Color(0xfff5f5f5),
+              offset: new Offset(20.0, 25.0),
+              blurRadius: 35.0,
+              spreadRadius: 1.0
+            )],
+          ),
+          child: new GoogleSignInButton(
             onPressed: loginWithGoogle,
-            elevation: 6,
+            borderRadius: 25,
+            darkMode: false,
           ),
         )
       ];
@@ -256,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
             child: new Container(
-                color: Colors.white,
+                color: Color(0xffecf0f1),
                 /**So that they dont go to the end and have a padding around them
              * Applies to all the children of this particular container.
              */
