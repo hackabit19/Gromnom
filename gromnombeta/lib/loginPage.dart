@@ -85,6 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String _email;
   String _password;
+  String _password2;
   FormType _formType = FormType.login;
 
   bool validateAndSave() {
@@ -96,6 +97,16 @@ class _LoginPageState extends State<LoginPage> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  int validatePassword(String p, String p2){
+    if(p!=null && p2!=null)
+    if(p==p2){
+      return 0;
+    }
+    else{
+      return 1;
     }
   }
 
@@ -116,13 +127,19 @@ class _LoginPageState extends State<LoginPage> {
 
         print('Signed in: $user');
       } else if (_formType == FormType.register) {
+        
         print("register");
+        int x = validatePassword(_password, _password2);
+        if(x==0){
         FirebaseUser newUser =
             await widget.auth.createUserWithEmailAndPassword(_email, _password);
         setState(() {
           user = newUser;
         });
         print('Registered user: $user');
+        }
+        else{null;}
+
       }
     }
   }
@@ -159,32 +176,33 @@ class _LoginPageState extends State<LoginPage> {
         height: 150,
       ),
       new Center(
-          child: Column(
-                      children:<Widget>[
-                        //  CircleAvatar(
-                        //    backgroundImage: AssetImage('assets/draftLogo.png'),
-                        //    backgroundColor: Colors.transparent,
-                        //    radius: 50,
-                        //  ),
-                        Text(
-                          " Welcome to",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        Text(
-                          "Gromnom",
-                          style: TextStyle(
-                            color: Color(0xffEAB543),
-                            fontSize: 45,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w700,
-                          ),
-                        )],
-                        ),
-                  ),
+        child: Column(
+          children: <Widget>[
+            //  CircleAvatar(
+            //    backgroundImage: AssetImage('assets/draftLogo.png'),
+            //    backgroundColor: Colors.transparent,
+            //    radius: 50,
+            //  ),
+            Text(
+              " Welcome to",
+              style: TextStyle(
+                fontSize: 20,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            Text(
+              "Gromnom",
+              style: TextStyle(
+                color: Color(0xffEAB543),
+                fontSize: 45,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w700,
+              ),
+            )
+          ],
+        ),
+      ),
       new SizedBox(
         height: 40,
       ),
@@ -192,22 +210,48 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   List<Widget> buildInputs() {
-    return [
-      new TextFormField(
-        decoration: InputDecoration(labelText: 'email'),
-        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-        onSaved: (value) => _email = value,
-      ),
-      new TextFormField(
-          decoration: InputDecoration(labelText: 'password'),
-          obscureText: true, //for hiding passwords
-          validator: (value) =>
-              value.isEmpty ? 'Password can\'t be empty' : null,
-          onSaved: (value) => _password = value),
-      new SizedBox(
-        height: 20,
-      ),
-    ];
+    if (_formType == FormType.login) {
+      return [
+        new TextFormField(
+          decoration: InputDecoration(labelText: 'email'),
+          validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+          onSaved: (value) => _email = value,
+        ),
+        new TextFormField(
+            decoration: InputDecoration(labelText: 'password'),
+            obscureText: true, //for hiding passwords
+            validator: (value) =>
+                value.isEmpty ? 'Password can\'t be empty' : null,
+            onSaved: (value) => _password = value),
+        new SizedBox(
+          height: 20,
+        ),
+      ];
+    } else {
+      return [
+        new TextFormField(
+          decoration: InputDecoration(labelText: 'email'),
+          validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+          onSaved: (value) => _email = value,
+        ),
+        new TextFormField(
+            decoration: InputDecoration(labelText: 'password'),
+            obscureText: true, //for hiding passwords
+            validator: (value) =>
+                value.isEmpty ? 'Password can\'t be empty' : null,
+            onSaved: (value) => _password = value),
+        new TextFormField(
+            decoration: InputDecoration(labelText: 'password'),
+            obscureText: true, //for hiding passwords
+            validator: (value) =>
+              !identical(value, _password)? 'Passwords don\'t match' : null,
+            ,
+            onSaved: (value) => validatePassword(_password, _password2),),
+        new SizedBox(
+          height: 20,
+        ),
+      ];
+    }
   }
 
   List<Widget> buildSubmitButtons() {
@@ -219,13 +263,13 @@ class _LoginPageState extends State<LoginPage> {
           child: new MaterialButton(
             child: new Text(
               'Login',
-               style: TextStyle(
-                            color: Color(0xfff5f5f5),
-                            fontSize: 18,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
+              style: TextStyle(
+                color: Color(0xfff5f5f5),
+                fontSize: 18,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w500,
               ),
+            ),
             elevation: 6,
             onPressed: validateAndSubmit, //calls a function validateAndSave
           ),
@@ -239,13 +283,13 @@ class _LoginPageState extends State<LoginPage> {
           child: new MaterialButton(
             child: new Text(
               'Create an Account',
-               style: TextStyle(
-                            color: Color(0xfff5f5f5),
-                            fontSize: 18,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
+              style: TextStyle(
+                color: Color(0xfff5f5f5),
+                fontSize: 18,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w500,
               ),
+            ),
             onPressed: moveToRegister,
             elevation: 6,
           ),
@@ -257,12 +301,12 @@ class _LoginPageState extends State<LoginPage> {
           height: 45,
           decoration: BoxDecoration(
             boxShadow: [
-            new BoxShadow(
-              color: Color(0xfff5f5f5),
-              offset: new Offset(20.0, 25.0),
-              blurRadius: 35.0,
-              spreadRadius: 1.0
-            )],
+              new BoxShadow(
+                  color: Color(0xfff5f5f5),
+                  offset: new Offset(20.0, 25.0),
+                  blurRadius: 35.0,
+                  spreadRadius: 1.0)
+            ],
           ),
           child: new GoogleSignInButton(
             onPressed: loginWithGoogle,
@@ -272,30 +316,26 @@ class _LoginPageState extends State<LoginPage> {
         )
       ];
     } else if (_formType == FormType.register) {
-      return [Material(
+      return [
+        Material(
           color: Color(0xffEAB543),
           borderRadius: BorderRadius.circular(25),
-          child: new
-          MaterialButton(
-          child: new Text(
-            'Create an Account',
-               style: TextStyle(
-                            color: Color(0xfff5f5f5),
-                            fontSize: 18,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
+          child: new MaterialButton(
+            child: new Text(
+              'Create an Account',
+              style: TextStyle(
+                color: Color(0xfff5f5f5),
+                fontSize: 18,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w500,
               ),
-          onPressed: validateAndSubmit, //calls a function validateAndSave
-        ),
+            ),
+            onPressed: validateAndSubmit, //calls a function validateAndSave
+          ),
         ),
         new FlatButton(
-          child: new Text(
-            'Already have an account? Login',
-            style: TextStyle(
-                            color: Color(0xff7f8c8d)
-                            )
-                            ),
+          child: new Text('Already have an account? Login',
+              style: TextStyle(color: Color(0xff7f8c8d))),
           onPressed: moveToLogin,
         )
       ];
@@ -312,7 +352,7 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
             child: new Container(
-              height: 1080,
+                height: 1080,
                 color: Color(0xffecf0f1),
                 /**So that they dont go to the end and have a padding around them
              * Applies to all the children of this particular container.
