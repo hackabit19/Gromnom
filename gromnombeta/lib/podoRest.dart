@@ -22,23 +22,27 @@ class Restaurants {
 }
 
 class RestaurantInfo {
-  String restaurant;
-  String code;
+  String name;
+  int code;
   String rating;
+  String costfortwo;
 
-  RestaurantInfo({this.restaurant, this.code, this.rating});
+  RestaurantInfo({this.name, this.code, this.rating, this.costfortwo});
 
   RestaurantInfo.fromJson(Map<String, dynamic> json) {
-    restaurant = json['restaurant'];
+    name = json['name'];
     code = json['code'];
     rating = json['rating'];
+    costfortwo = json['costfortwo'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['restaurant'] = this.restaurant;
+    data['name'] = this.name;
     data['code'] = this.code;
     data['rating'] = this.rating;
+    data['costfortwo'] = this.costfortwo;
     return data;
   }
 }
+

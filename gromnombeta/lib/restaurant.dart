@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:gromnombeta/hostAMeal.dart';
 import 'package:gromnombeta/podoRest.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
-
 class UserArguments {
   final FirebaseUser user;
-  UserArguments(this.user);
+  final Address location;
+  UserArguments(this.user, this.location);
 }
 
 class Restaurant extends StatefulWidget {
@@ -21,11 +21,11 @@ class Restaurant extends StatefulWidget {
 }
 
 class RestaurantState extends State<Restaurant> {
-
   var jsonResponse;
 
-  Future _getRestaurants() async{
-    var url = "http://192.168.0.102/rest.json";
+  Future _getRestaurants() async {
+    var url =
+        "http://192.168.0.103:8080/fetchrestaurants/?pincode=835215&address=%20Mesra";
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -38,7 +38,6 @@ class RestaurantState extends State<Restaurant> {
 
     Restaurants restaurants = Restaurants.fromJson(jsonResponse);
     return restaurants;
-
   }
 
   @override
@@ -60,29 +59,24 @@ class RestaurantState extends State<Restaurant> {
       ),
       body: FutureBuilder(
         future: _getRestaurants(),
-        builder: (context, AsyncSnapshot snapshot){
+        builder: (context, AsyncSnapshot snapshot) {
           //return Text('${snapshot.data.restaurants[0]}');
-            return ListView.builder(
-              itemCount: snapshot.data.restaurants.length ,
-              itemBuilder: (context, index){
-                //Combo combo = snapshot.data.combo[index];
-                RestaurantInfo restaurant = snapshot.data.restaurants[index];//.restaurants[index];
-                return Container(
-                  child: OneRest(args.user, restaurant)
-                );
-              },
-
-            );
-
-
+          return ListView.builder(
+            itemCount: snapshot.data.restaurants.length,
+            itemBuilder: (context, index) {
+              //Combo combo = snapshot.data.combo[index];
+              RestaurantInfo restaurant =
+                  snapshot.data.restaurants[index]; //.restaurants[index];
+              return Container(child: OneRest(args.user, restaurant));
+            },
+          );
         },
       ),
-      
     );
   }
 }
 
-class OneRest extends StatefulWidget{
+class OneRest extends StatefulWidget {
   OneRest(this.user, this.restaurantInfo);
   final FirebaseUser user;
   final RestaurantInfo restaurantInfo;
@@ -90,37 +84,31 @@ class OneRest extends StatefulWidget{
   State<StatefulWidget> createState() => OneRestState();
 }
 
-class OneRestState extends State<OneRest>{
+class OneRestState extends State<OneRest> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-         Navigator.pushNamed(
-                          context,
-                          HostAMeal.routeName,
-                          arguments: RestArguments(widget.user,widget.restaurantInfo));
+      onTap: () {
+        Navigator.pushNamed(context, HostAMeal.routeName,
+            arguments: RestArguments(widget.user, widget.restaurantInfo));
       },
-          child: Container(
+      child: Container(
         height: 80,
         margin: EdgeInsets.only(top: 10),
-        padding: EdgeInsets.only(top: 18),
+        padding: EdgeInsets.only(top: 15),
         decoration: BoxDecoration(
           color: Color(0xffEAB543),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           children: <Widget>[
-            Text('${widget.restaurantInfo.restaurant}'),
-            Text('${widget.restaurantInfo.rating}'),
+            Text('${widget.restaurantInfo.name}'),
+            Text('Rating : ${widget.restaurantInfo.rating}'),
+            Text('Cost for two : ${widget.restaurantInfo.costfortwo}')
             //SizedBox(height: 30,)
-
-
           ],
         ),
       ),
     );
-    
-    
   }
-
 }
