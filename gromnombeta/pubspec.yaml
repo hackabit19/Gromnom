@@ -26,6 +26,8 @@ dependencies:
   http: ^0.12.0+2
   geocoder: 
   location: 
+  random_string: ^1.1.0
+
 
 
   flutter_auth_buttons: 0.6.0

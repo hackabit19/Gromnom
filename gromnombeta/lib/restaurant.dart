@@ -25,7 +25,7 @@ class RestaurantState extends State<Restaurant> {
 
   Future _getRestaurants() async {
     var url =
-        "http://192.168.0.103:8080/fetchrestaurants/?pincode=835215&address=%20Mesra";
+        "http://192.168.43.47:8080/fetchrestaurants/?pincode=835215&address=%20Mesra";
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -61,12 +61,16 @@ class RestaurantState extends State<Restaurant> {
         future: _getRestaurants(),
         builder: (context, AsyncSnapshot snapshot) {
           //return Text('${snapshot.data.restaurants[0]}');
+          if (!snapshot.hasData) return Center(child: Text("Connecting"));
+
           return ListView.builder(
             itemCount: snapshot.data.restaurants.length,
             itemBuilder: (context, index) {
               //Combo combo = snapshot.data.combo[index];
               RestaurantInfo restaurant =
                   snapshot.data.restaurants[index]; //.restaurants[index];
+              if (!snapshot.hasData) return Center(child: Text("Connecting"));
+
               return Container(child: OneRest(args.user, restaurant));
             },
           );

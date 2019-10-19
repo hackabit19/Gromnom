@@ -92,7 +92,7 @@ class MyUserInfoState extends State<MyUserInfo> {
             child: Stack(
               children: <Widget>[
                 Align(
-                  alignment: Alignment(0.0, 0.5),
+                  alignment: Alignment(0.0, 0.4),
                   child: Text(_showName().toString(),
                       style: TextStyle(
                         color: Color(0xff2c3e50),
@@ -107,29 +107,59 @@ class MyUserInfoState extends State<MyUserInfo> {
             ),
           ),
           Align(
-            alignment: Alignment(0.0, -0.8),
-            child: CircleAvatar(
-              backgroundImage: _showImage(),
-              backgroundColor: Colors.transparent,
-              radius: 50,
+            alignment: Alignment(0.0, -0.85),
+            child: Container(
+              child: CircleAvatar(
+                backgroundImage: _showImage(),
+                backgroundColor: Colors.transparent,
+                radius: 50,
+              ),
+              // decoration: BoxDecoration(
+              //   shape: BoxShape.circle,
+              //   boxShadow: [
+              //     new BoxShadow(
+              //         color: Color(0xff7f8c8d),
+              //         offset: new Offset(3, 3),
+              //         blurRadius: 18.0,
+              //         spreadRadius: 1.0)
+              //   ]
+              // ),
             ),
           ),
 
           Align(
-            alignment: Alignment(1, 1),
+            alignment: Alignment(0, -0.35),
             child: FutureBuilder(
               future: _memberSince(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Text('Member Since : ${snapshot.data['membersince'].toString()}');
+                if (!snapshot.hasData) return Center(child: Text("Connecting"));
+
+                return Text(
+                    'Member Since : ${snapshot.data['membersince'].toString().split(' ')[0].split('-')[1]}/${snapshot.data['membersince'].toString().split(' ')[0].split('-')[0]}',
+                    style: TextStyle(
+                      color: Color(0xff7f8c8d),
+                      fontSize: 15,
+                      fontFamily: 'SFDisplay',
+                      fontWeight: FontWeight.w500,
+                    ));
               },
             ),
           ),
           Align(
-            alignment: Alignment(1, 0),
+            alignment: Alignment(0, -0.42),
             child: FutureBuilder(
               future: _memberSince(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                return Text('Member Since : ${snapshot.data['email'].toString()}');
+                if (!snapshot.hasData) return Center(child: Text("Connecting"));
+
+                return Text('${snapshot.data['email'].toString()}',
+                    style: TextStyle(
+                      color: Color(0xff7f8c8d),
+                      fontSize: 15,
+                      fontFamily: 'SFDisplay',
+                      fontWeight: FontWeight.w500,
+                    )
+                    );
               },
             ),
           ),

@@ -72,7 +72,11 @@ class _LoginPageState extends State<LoginPage> {
         print('${docs.documents[0].data}');
       } else {
         print("New User");
-        Firestore.instance.collection('users').document('${user.email}').setData({'email': user.email, 'uid': user.uid, 'membersince': time});
+        Firestore.instance
+            .collection('users')
+            .document('${user.email}')
+            .setData(
+                {'email': user.email, 'uid': user.uid, 'membersince': time});
       }
     });
   }
@@ -100,12 +104,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  int validatePassword(String p, String p2){
-    if(p!=null && p2!=null)
-    if(p==p2){
+  int validatePassword(String p, String p2) {
+    if (p != null && p2 != null) if (p == p2) {
       return 0;
-    }
-    else{
+    } else {
       return 1;
     }
   }
@@ -127,19 +129,18 @@ class _LoginPageState extends State<LoginPage> {
 
         print('Signed in: $user');
       } else if (_formType == FormType.register) {
-        
         print("register");
         int x = validatePassword(_password, _password2);
-        if(x==0){
-        FirebaseUser newUser =
-            await widget.auth.createUserWithEmailAndPassword(_email, _password);
-        setState(() {
-          user = newUser;
-        });
-        print('Registered user: $user');
+        if (x == 0) {
+          FirebaseUser newUser = await widget.auth
+              .createUserWithEmailAndPassword(_email, _password);
+          setState(() {
+            user = newUser;
+          });
+          print('Registered user: $user');
+        } else {
+          null;
         }
-        else{null;}
-
       }
     }
   }
@@ -241,11 +242,12 @@ class _LoginPageState extends State<LoginPage> {
                 value.isEmpty ? 'Password can\'t be empty' : null,
             onSaved: (value) => _password = value),
         new TextFormField(
-            decoration: InputDecoration(labelText: 'password'),
-            obscureText: true, //for hiding passwords
-            validator: (value) =>
-              !identical(value, _password)? 'Passwords don\'t match' : null,
-            onSaved: (value) => validatePassword(_password, _password2),),
+          decoration: InputDecoration(labelText: 'password'),
+          obscureText: true, //for hiding passwords
+          validator: (value) =>
+              !identical(value, _password) ? 'Passwords don\'t match' : null,
+          onSaved: (value) => validatePassword(_password, _password2),
+        ),
         new SizedBox(
           height: 20,
         ),
@@ -373,6 +375,8 @@ class _LoginPageState extends State<LoginPage> {
         return new FutureBuilder<String>(
           future: awaitLogin(), // a Future<String> or null
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            //if (!snapshot.hasData) return Center(child: Text("Connecting"));
+
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return null;
