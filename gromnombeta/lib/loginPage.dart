@@ -353,6 +353,7 @@ class _LoginPageState extends State<LoginPage> {
         return new Scaffold(
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
+            physics: ,
             child: new Container(
                 height: 1080,
                 color: Color(0xffecf0f1),
@@ -367,6 +368,7 @@ class _LoginPageState extends State<LoginPage> {
               */
                   key: _formKey,
                   child: new Column(
+                    
                     /**To change the position and alignment of the login bar */
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: title() + buildInputs() + buildSubmitButtons(),

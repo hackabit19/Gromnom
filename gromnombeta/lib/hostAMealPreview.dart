@@ -178,10 +178,11 @@ class _HostAMealPreviewState extends State<HostAMealPreview> {
                               });
                               print(finalCombo.toJson());
                               print(combo2.toJson());
-                              Firestore.instance.collection('chatgroups').document('${args.user.email}').setData(
+                              Firestore.instance.collection('chatgroups').document('${docName}').setData(
                                 {
                                   'users' : users,
                                   'orderid' : docName,
+                                  'host' : args.user.email
                                 }
                               );
                             }

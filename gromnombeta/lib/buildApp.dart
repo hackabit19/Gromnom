@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gromnombeta/chatIndex.dart';
 import 'package:gromnombeta/homePage.dart';
 import 'package:gromnombeta/userInfo.dart';
 import 'auth.dart';
@@ -115,9 +116,9 @@ class _BuildAppState extends State<BuildApp> {
         controller: _myPage,
         //So that when we swipe pages, BottomBar gets updated
         onPageChanged: (index) => onItemTapped(index),
-        children: <Widget>[HomePage(user, _location), MyUserInfo(user)],
+        children: <Widget>[HomePage(user, _location),ChatIndex(user), MyUserInfo(user)],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
 
@@ -125,10 +126,10 @@ class _BuildAppState extends State<BuildApp> {
 
         //splashColor: Color(0xffEAB543),
         onPressed: () => Navigator.pushNamed(
-            context,
-            Restaurant.routeName,
-            arguments: UserArguments(widget.user, _location),
-          ),
+          context,
+          Restaurant.routeName,
+          arguments: UserArguments(widget.user, _location),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         //type: BottomNavigationBarType.shifting,
@@ -140,6 +141,7 @@ class _BuildAppState extends State<BuildApp> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text('Chat')),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), title: Text('User')),
         ],

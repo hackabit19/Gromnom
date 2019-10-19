@@ -24,7 +24,7 @@ class HostAMealState extends State<HostAMeal> {
   var jsonResponse;
 
   Future _getCombos() async {
-    var url = "http://192.168.43.47:8080/combos/?city=ranchi&code=101019";
+    var url = "http://192.168.0.103:8080/combos/?city=ranchi&code=101019";
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
