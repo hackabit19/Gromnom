@@ -1,3 +1,5 @@
+![draftLogo](https://user-images.githubusercontent.com/30192068/67145190-ee661c00-f29c-11e9-96db-aa89dc0fff42.png)
+
 # Gromnom
 
 > A food pooling app bringing foodies together.
@@ -9,3 +11,7 @@ We will create meal combinations out of the food items from food ordering apps l
 
 ## Working
 Suppose a person A wants to order a pizza from a particular outlet which gives a maximum discount while ordering 3 pizzas. So he "hosts" a meal consisting of 3 pizzas (with two pizzas left unclaimed) on Gromnom (the app) and schedules the checkout at a particular time, say 2 PM. Now, some person B opens the app to see all hosted meals and finds the one created by A. Then, B claims the remaining two pizzas and makes a payment through the app. A gets a notification when all the items on his order have been claimed and are ready for checkout. A and B will meet at the delivery location, take their orders and B will mark the order delivered on Gromnom resulting in the staged payment being sent out to A.
+
+## Developed By
+- [Vivek Nigam](www.github.com/viveknigam3003)
+- [Hemabh Ravee](www.github.com/hemabhravee)
