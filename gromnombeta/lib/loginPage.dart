@@ -174,16 +174,19 @@ class _LoginPageState extends State<LoginPage> {
   List<Widget> title() {
     return [
       new SizedBox(
-        height: 150,
+        height: 100,
       ),
       new Center(
         child: Column(
           children: <Widget>[
-            //  CircleAvatar(
-            //    backgroundImage: AssetImage('assets/draftLogo.png'),
-            //    backgroundColor: Colors.transparent,
-            //    radius: 50,
-            //  ),
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/draftLogo.png'),
+              backgroundColor: Colors.transparent,
+              radius: 60,
+            ),
+            new SizedBox(
+              height: 20,
+            ),
             Text(
               " Welcome to",
               style: TextStyle(

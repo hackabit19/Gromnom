@@ -44,13 +44,17 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => Navigator.pushNamed(
-        context,
-        Restaurant.routeName,
-        arguments: UserArguments(widget.user,_location),
-      ),
-      child: Text("Host an Order"),
+    return ListView(
+          children: <Widget>[
+        FloatingActionButton(
+          onPressed: () => Navigator.pushNamed(
+            context,
+            Restaurant.routeName,
+            arguments: UserArguments(widget.user,_location),
+          ),
+          child: Text("Host an Order"),
+        ),
+      ],
     );
   }
 }
