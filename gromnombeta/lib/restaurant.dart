@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class UserArguments {
   final FirebaseUser user;
@@ -18,6 +19,19 @@ class RestaurantState extends State<Restaurant> {
   Widget build(BuildContext context) {
     final UserArguments args = ModalRoute.of(context).settings.arguments;
 
-    return null;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffEAB543),
+        title: Text(
+          "Pick a Restaurant",
+          style: TextStyle(
+            color: Color(0xfff5f5f5),
+            fontSize: 22,
+            fontFamily: 'SFDisplay',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
   }
 }
