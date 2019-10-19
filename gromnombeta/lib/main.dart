@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gromnombeta/homePage.dart';
+import 'package:gromnombeta/hostAMeal.dart';
 import 'package:gromnombeta/restaurant.dart';
 import 'loginPage.dart';
 import 'auth.dart';
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
         //'/chatPage': (context) => ChatPage(),
+       HostAMeal.routeName: (context) => HostAMeal(),
         Restaurant.routeName: (context) => Restaurant(),
       },
       home: new LoginPage(new Auth()),

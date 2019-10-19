@@ -6,6 +6,7 @@ import 'restaurant.dart';
 class HomePage extends StatefulWidget {
   HomePage(this.user);
   final FirebaseUser user;
+  static const routeName = '/hostAMeal';
 
   @override
   State<StatefulWidget> createState() => HomePageState();

@@ -11,18 +11,18 @@ class UserArguments {
   UserArguments(this.user);
 }
 
-class Restaurant extends StatefulWidget {
-  static const routeName = '/restaurant';
+class HostAMeal extends StatefulWidget {
+  static const routeName = '/hostAMeal';
 
   @override
-  State<StatefulWidget> createState() => RestaurantState();
+  State<StatefulWidget> createState() => HostAMealState();
 }
 
-class RestaurantState extends State<Restaurant> {
+class HostAMealState extends State<HostAMeal> {
 
   var jsonResponse;
 
-  Future _getRestaurants() async{
+  Future _getCombos() async{
     var url = "";
     var response = await http.get(url);
 
@@ -44,7 +44,7 @@ class RestaurantState extends State<Restaurant> {
       appBar: AppBar(
         backgroundColor: Color(0xffEAB543),
         title: Text(
-          "Pick a Restaurant",
+          "Pick a Meal",
           style: TextStyle(
             color: Color(0xfff5f5f5),
             fontSize: 22,
@@ -54,7 +54,7 @@ class RestaurantState extends State<Restaurant> {
         ),
       ),
       // body: FutureBuilder(
-      //   future: _getRestaurants(),
+      //   future: _getCombos(),
       //   builder: (context, AsyncSnapshot snapshot){
 
       //   },
