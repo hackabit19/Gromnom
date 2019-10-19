@@ -245,7 +245,6 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true, //for hiding passwords
             validator: (value) =>
               !identical(value, _password)? 'Passwords don\'t match' : null,
-            ,
             onSaved: (value) => validatePassword(_password, _password2),),
         new SizedBox(
           height: 20,
@@ -344,8 +343,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    /**Everything is inside this Scaffold() 
-     * which is returned when we build(BulidContext context) this widget.**/
     switch (authStatus) {
       case AuthStatus.notSignedIn:
         return new Scaffold(
@@ -357,7 +354,6 @@ class _LoginPageState extends State<LoginPage> {
                 /**So that they dont go to the end and have a padding around them
              * Applies to all the children of this particular container.
              */
-
                 padding: EdgeInsets.all(16),
                 child: new Form(
                   /**
