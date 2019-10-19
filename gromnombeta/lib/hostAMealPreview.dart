@@ -169,7 +169,7 @@ class _HostAMealPreviewState extends State<HostAMealPreview> {
                                   .document('$docName')
                                   .setData({
                                 'currentlyhosted': true,
-                                'restaurant': "lol",
+                                'restaurant': args.restaurantInfo.name,
                                 'host': "${args.user.email}",
                                 'totalitems': finalCombo.items.length,
                                 'items': combo2.toJson(),

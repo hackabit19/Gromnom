@@ -14,6 +14,7 @@ class ChatIndexState extends State<ChatIndex> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        color: Color(0xffecf0f1),
         child: StreamBuilder(
             stream: Firestore.instance.collection('chatgroups').snapshots(),
             builder: (context, snapshot) {
@@ -30,7 +31,17 @@ class ChatIndexState extends State<ChatIndex> {
               }
 
               if (count == 0) {
-                return Text('You have no open orders');
+                return Container(
+                  alignment: Alignment(0, 0),
+                  child: Text(
+                    'Oh Snap!\nLooks like you have no open orders',
+                    style: TextStyle(
+                        color: Color(0xff7f8c8d),
+                        fontSize: 20,
+                        fontFamily: 'SFDisplay',
+                        fontWeight: FontWeight.w600),
+                  ),
+                );
               }
 
               return ListView.builder(
@@ -46,13 +57,43 @@ class ChatIndexState extends State<ChatIndex> {
                                     snapshot.data.documents[indices[index]]
                                         ['orderid'])));
                       },
-                      child: Container(
-                          color: Colors.yellow,
-                          margin: EdgeInsets.only(top: 20, left: 10, right: 10),
-                          padding: EdgeInsets.only(
-                              top: 25, bottom: 25, left: 15, right: 15),
-                          child: Text(snapshot.data.documents[indices[index]]
-                              ['orderid'])),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Container(
+                                child: Text(
+                                  "Chats",
+                                  style: TextStyle(
+                                      color: Color(0xff34495e),
+                                      fontSize: 30,
+                                      fontFamily: 'SFDisplay',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                margin: EdgeInsets.only(left: 10, top: 15)),
+                          ),
+                          Container(
+                              color: Color(0xfff5f5f5),
+                              alignment: Alignment(-1, 0),
+                              height: 80,
+                              margin:
+                                  EdgeInsets.only(top: 20, left: 0, right: 0),
+                              padding: EdgeInsets.only(
+                                  top: 25, bottom: 25, left: 15, right: 15),
+                              child: Text(
+                                snapshot.data.documents[indices[index]]
+                                    ['orderid'],
+                                style: TextStyle(
+                                  color: Color(0xff34495e),
+                                  fontSize: 20,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'SFDisplay',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )),
+                        ],
+                      ),
                     );
                   });
             })

@@ -34,18 +34,11 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         .collection('messages')
         .document('$_date${widget.user.email}');
 
-    reference.setData(
-      {'from': widget.user.email,
-      'msg': txt,
-      'isme': true}
-      );
+    reference.setData({'from': widget.user.email, 'msg': txt, 'isme': true});
   }
 
-    
-  
-
   _alignment(snapshot, index) {
-    if (snapshot.data.documents[index]['from'] == widget.user.email ){
+    if (snapshot.data.documents[index]['from'] == widget.user.email) {
       return CrossAxisAlignment.end;
     } else {
       return CrossAxisAlignment.start;
@@ -53,10 +46,10 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   }
 
   // _itemCount(snapshot){
-    
+
   //   try{ return snapshot.data.documents.length;}
   //   catch(e){print(e);}
-    
+
   // }
 
   @override
@@ -71,7 +64,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             onPressed: () => Navigator.pop(context)),
         backgroundColor: Color(0xffEAB543),
         title: Text(
-          "",
+          "Chat",
           style: TextStyle(
             color: Color(0xfff5f5f5),
             fontSize: 22,
@@ -81,7 +74,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
         ),
       ),
       body: Container(
-        color: Colors.yellow,
+        color: Color(0xffdfe4ea),
         child: Column(
           children: <Widget>[
             new Flexible(
@@ -93,14 +86,12 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                         .snapshots(),
                     builder: (context, snapshot) {
                       return ListView.builder(
-
-                          
-                          itemCount:snapshot.data.documents.length,
+                          itemCount: snapshot.data.documents.length,
                           //reverse: true,
 
                           itemBuilder: (context, index) {
                             return Container(
-                                padding: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.only(top: 10, bottom: 10),
                                 margin: EdgeInsets.only(top: 10),
                                 decoration: BoxDecoration(
                                   shape: BoxShape.rectangle,
@@ -111,10 +102,30 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                                   crossAxisAlignment:
                                       _alignment(snapshot, index),
                                   children: <Widget>[
-                                    Text(
-                                        '${snapshot.data.documents[index]['from']}'),
-                                    Text(
-                                        '${snapshot.data.documents[index]['msg']}'),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10.0),
+                                      child: Text(
+                                        '${snapshot.data.documents[index]['from'].toString().split('@')[0]}',
+                                        style: TextStyle(
+                                          color: Color(0xff3498db),
+                                          fontSize: 15,
+                                          fontFamily: 'SFDisplay',
+                                          fontWeight: FontWeight.w200,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10.0, top: 6,bottom: 4),
+                                      child: Text(
+                                        '${snapshot.data.documents[index]['msg']}',
+                                        style: TextStyle(
+                                          color: Color(0xff34495e),
+                                          fontSize: 20,
+                                          fontFamily: 'SFDisplay',
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ));
                           });
@@ -161,18 +172,22 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               ),
             ),
           ),
-          new Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 3.0),
-              child: new IconButton(
-                //Send Button
-                icon: Icon(Icons.send),
-                onPressed:
-                    _isWriting ? () => _submitMsg(_textController.text) : null,
-              ))
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: new Container(
+                decoration: BoxDecoration(
+                  color: Color(0xff3498db),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 3.0),
+                child: new IconButton(
+                  //Send Button
+                  icon: Icon(Icons.send, color: Color(0xfff5f5f5)),
+                  onPressed: _isWriting
+                      ? () => _submitMsg(_textController.text)
+                      : null,
+                )),
+          )
         ],
       ),
       //  ),
