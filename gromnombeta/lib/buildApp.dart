@@ -4,6 +4,9 @@ import 'package:gromnombeta/homePage.dart';
 import 'package:gromnombeta/userInfo.dart';
 import 'auth.dart';
 import 'userInfo.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:location/location.dart';
+import 'restaurant.dart';
 
 class BuildApp extends StatefulWidget {
   BuildApp(this.auth, this.onSignedOut, this.user) : super();
@@ -24,6 +27,27 @@ class _BuildAppState extends State<BuildApp> {
   static BaseAuth passAuth;
   FirebaseUser user;
 
+  List<Address> address;
+  var location = new Location();
+  LocationData locationData;
+  Address _location;
+
+  getLocation() async {
+    try {
+      locationData = await location.getLocation();
+      Coordinates coordinates =
+          new Coordinates(locationData.latitude, locationData.longitude);
+
+      address = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      _location = address.first;
+
+      print(
+          "${_location.featureName} : ${_location.coordinates} : ${_location.locality} : ${_location.postalCode}");
+    } catch (e) {
+      print(e);
+    }
+  }
+
   void _signOut() async {
     try {
       await auth.signOut();
@@ -42,6 +66,8 @@ class _BuildAppState extends State<BuildApp> {
     super.initState();
     _myPage = PageController(initialPage: currentTab);
     passAuth = widget.auth;
+
+    getLocation();
   }
 
 //Function for onTap value of BottomBar.
@@ -69,12 +95,12 @@ class _BuildAppState extends State<BuildApp> {
         title: Text(
           "Gromnom",
           style: TextStyle(
-                            color: Color(0xfff5f5f5),
-                            fontSize: 22,
-                            fontFamily: 'SFDisplay',
-                            fontWeight: FontWeight.w500,
-                          ),
-              ),
+            color: Color(0xfff5f5f5),
+            fontSize: 22,
+            fontFamily: 'SFDisplay',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         actions: <Widget>[
           FloatingActionButton(
             backgroundColor: Color(0xffEAB543),
@@ -89,7 +115,20 @@ class _BuildAppState extends State<BuildApp> {
         controller: _myPage,
         //So that when we swipe pages, BottomBar gets updated
         onPageChanged: (index) => onItemTapped(index),
-        children: <Widget>[HomePage(user), MyUserInfo(user)],
+        children: <Widget>[HomePage(user, _location), MyUserInfo(user)],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+
+        child: Icon(Icons.add, color: Color(0xffEAB543)),
+
+        //splashColor: Color(0xffEAB543),
+        onPressed: () => Navigator.pushNamed(
+            context,
+            Restaurant.routeName,
+            arguments: UserArguments(widget.user, _location),
+          ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         //type: BottomNavigationBarType.shifting,
@@ -101,7 +140,8 @@ class _BuildAppState extends State<BuildApp> {
         },
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('User')),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), title: Text('User')),
         ],
       ),
     );
