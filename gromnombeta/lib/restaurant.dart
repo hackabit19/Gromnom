@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
 
 class UserArguments {
   final FirebaseUser user;
@@ -15,6 +19,23 @@ class Restaurant extends StatefulWidget {
 }
 
 class RestaurantState extends State<Restaurant> {
+
+  var jsonResponse;
+
+  Future _getRestaurants() async{
+    var url = "";
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      if (mounted) {
+        setState(() {
+          jsonResponse = json.decode((response.body));
+        });
+      }
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserArguments args = ModalRoute.of(context).settings.arguments;
@@ -32,6 +53,13 @@ class RestaurantState extends State<Restaurant> {
           ),
         ),
       ),
+      // body: FutureBuilder(
+      //   future: _getRestaurants(),
+      //   builder: (context, AsyncSnapshot snapshot){
+
+      //   },
+      // ),
+      
     );
   }
 }
