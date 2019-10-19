@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ class ChatPage extends StatefulWidget {
   ChatPage(this.user, this.chatid) : super();
   final FirebaseUser user;
   final String chatid;
+  //DateTime _date = DateTime.now();
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -16,33 +19,48 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Firestore _fireStore = Firestore.instance;
 
-  var orderCount = 0;
+  //final List<Msg> _messages = <Msg>[];
 
-  //A list of type Msg -> Stateless Widgets that hold all the text that the user inputs
-  final List<Msg> _messages = <Msg>[];
-  //This allows us to control what's happening with our input box
   final TextEditingController _textController = new TextEditingController();
   ScrollController scrollController = ScrollController();
   bool _isWriting = false;
 
-  Future<void> callback() async {
-    if (_textController.text.length > 0) {
-      await _fireStore
-          .collection('messages')
-          .add({'text': _textController.text, 'from': widget.user.displayName});
+  Future<void> callback(String txt) async {
+    DateTime _date = DateTime.now();
+
+    DocumentReference reference = _fireStore
+        .collection('chatgroups')
+        .document('${widget.chatid}')
+        .collection('messages')
+        .document('$_date${widget.user.email}');
+
+    reference.setData(
+      {'from': widget.user.email,
+      'msg': txt,
+      'isme': true}
+      );
+  }
+
+    
+  
+
+  _alignment(snapshot, index) {
+    if (snapshot.data.documents[index]['from'] == widget.user.email ){
+      return CrossAxisAlignment.end;
+    } else {
+      return CrossAxisAlignment.start;
     }
   }
 
+  // _itemCount(snapshot){
+    
+  //   try{ return snapshot.data.documents.length;}
+  //   catch(e){print(e);}
+    
+  // }
+
   @override
   Widget build(BuildContext context) {
-    // if(orderCount == 0)
-    // {
-    //   return Text("You have no open chats");
-    // }
-    // else{
-    //   return Card();
-    // }
-
     return Scaffold(
       appBar: AppBar(
         leading: FloatingActionButton(
@@ -71,21 +89,36 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
                     stream: Firestore.instance
                         .collection('chatgroups')
                         .document('${widget.chatid}')
+                        .collection('messages')
                         .snapshots(),
-                    builder: (context, index) {
-                      return Container(
-                        child: Text('${Firestore.instance.collection('chatgroups').document('${widget.chatid}')}'),
-                      );
-                    }
-                    // new ListView.builder(
-                    //   itemBuilder: (context, index) =>
-                    //       _messages[index], //Each msg is a different object
-                    //   itemCount: _messages.length,
-                    //   reverse:
-                    //       true, //this means start at the bottom and move to the top
-                    //   padding: EdgeInsets.all(6.0),
-                    // ),
-                    )),
+                    builder: (context, snapshot) {
+                      return ListView.builder(
+
+                          
+                          itemCount:snapshot.data.documents.length,
+                          //reverse: true,
+
+                          itemBuilder: (context, index) {
+                            return Container(
+                                padding: EdgeInsets.only(top: 10),
+                                margin: EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      _alignment(snapshot, index),
+                                  children: <Widget>[
+                                    Text(
+                                        '${snapshot.data.documents[index]['from']}'),
+                                    Text(
+                                        '${snapshot.data.documents[index]['msg']}'),
+                                  ],
+                                ));
+                          });
+                    })),
             new Divider(height: 1.0),
             new Container(
                 child: _buildComposer(), //this is the input field
@@ -99,12 +132,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   }
 
   Widget _buildComposer() {
-    return
-        // new IconTheme(
-        //   data: new IconThemeData(color: Colors.white),
-
-        //child:
-        new Container(
+    return new Container(
       decoration: BoxDecoration(
         //borderRadius: BorderRadius.circular(20),
         color: Colors.transparent,
@@ -153,108 +181,10 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   _submitMsg(String txt) {
     //Cleans the textField and changes state
+    txt == null ? null : callback(txt);
     _textController.clear();
     setState(() {
       _isWriting = false;
     });
-
-    Msg msg = new Msg(
-      txt: txt,
-      animationController: new AnimationController(
-          vsync: this, duration: new Duration(milliseconds: 300)),
-    );
-
-    setState(() {
-      _messages.insert(0, msg);
-    });
-    msg.animationController.forward();
-  }
-
-  @override
-  void dispose() {
-    for (Msg msg in _messages) {
-      msg.animationController.dispose();
-    }
-    super.dispose();
-  }
-}
-
-class Msg extends StatelessWidget {
-  Msg({Key key, this.txt, this.from, this.me, this.animationController});
-  final String txt;
-  final String from;
-  final bool me;
-  final AnimationController animationController;
-
-  @override
-  Widget build(BuildContext ctx) {
-    return SizeTransition(
-      sizeFactor: new CurvedAnimation(
-        parent: animationController,
-        curve:
-            Curves.easeOut, //this decides what type of animation is being used
-      ),
-      axisAlignment: 0.0,
-      child: new Container(
-        padding: EdgeInsets.all(8),
-        //  color: Colors.yellow,
-        //padding: EdgeInsets.only(top:8,bottom: 8,left: 8,),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        margin: EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(right: 10, top: 3),
-              child: CircleAvatar(child: Text(defaultUserName[0])),
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(top: 5, left: 12, bottom: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white,
-                ),
-                child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start, //alignment of all the text
-                  children: <Widget>[
-                    Text(
-                      defaultUserName,
-                      style: Theme.of(ctx).textTheme.subhead,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      margin: EdgeInsets.only(right: 10.0, top: 6.0),
-                      child: new Text(txt),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  var defaultUserName = "Benedict Cumberbatch";
-}
-
-class Message extends StatelessWidget {
-  String from;
-  String text;
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
   }
 }
