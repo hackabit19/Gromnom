@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        fontFamily: 'SFDisplay'
+        fontFamily: 'SFDisplay',
         ),
       home: new LoginPage(new Auth()),
     );

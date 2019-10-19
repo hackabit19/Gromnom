@@ -59,6 +59,8 @@ class _LoginPageState extends State<LoginPage> {
       print("login should work");
     });
 
+    String time = DateTime.now().toString();
+
     Firestore.instance
         .collection("users")
         .where('uid', isEqualTo: user.uid)
@@ -70,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
         print('${docs.documents[0].data}');
       } else {
         print("New User");
-        Firestore.instance.collection('users').add({'email': user.email, 'uid': user.uid, 'membersince': DateTime.now()});
+        Firestore.instance.collection('users').document('${user.email}').setData({'email': user.email, 'uid': user.uid, 'membersince': time});
       }
     });
   }

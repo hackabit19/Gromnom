@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,11 @@ class MyUserInfo extends StatefulWidget{
 }
 
 class MyUserInfoState extends State<MyUserInfo>{
+
+  // _memberSince(){
+  //  var doc = Firestore.instance.collection('users').document('${widget.user.email}').get();
+  //  print(doc.membersince);
+  // }
 
   _showName() {
     if (widget.user.displayName == null) {
@@ -36,22 +42,38 @@ class MyUserInfoState extends State<MyUserInfo>{
         children: <Widget>[
           //The container containing profile and name
           Container(
-            color: Colors.yellow[700],
+            height: 1080,
+            color: Color(0xffecf0f1),
           ),
 
           Container(
             height: 250,
             decoration: BoxDecoration(
-                color: Colors.yellow,
+                color: Color(0xfff5f5f5),
                 borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(40))),
+                    BorderRadius.only(
+                      bottomRight: Radius.circular(50),
+                      bottomLeft: Radius.circular(50)),
+                boxShadow: [
+                    new BoxShadow(
+                      color: Color(0xff7f8c8d),
+                      offset: new Offset(0.0, 1.0),
+                      blurRadius: 50.0,
+                      spreadRadius: 5.0
+                  )]
+                ),
             child: Stack(
               children: <Widget>[
                 Align(
-                  alignment: Alignment(0.1, 0.9),
+                  alignment: Alignment(0.0, 0.5),
                   child: Text(
-                    _showName(),
-                    style: TextStyle(fontSize: 24),
+                    _showName().toString(),
+                    style: TextStyle(
+                            color: Color(0xff2c3e50),
+                            fontSize: 30,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w500,
+                    )
                   ),
                 ),
 
@@ -60,13 +82,17 @@ class MyUserInfoState extends State<MyUserInfo>{
             ),
           ),
           Align(
-            alignment: Alignment(-1, -0.3),
+            alignment: Alignment(0.0, -0.8),
             child: CircleAvatar(
               backgroundImage: _showImage(),
               backgroundColor: Colors.transparent,
               radius: 50,
             ),
           ),
+          // Align(alignment: Alignment(0, 0),
+          // child: Container(
+          //   child: _memberSince(),
+          // ),)
         ],
       ),
     );

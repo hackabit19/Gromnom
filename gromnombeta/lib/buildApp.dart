@@ -65,11 +65,21 @@ class _BuildAppState extends State<BuildApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gromnom"),
+        backgroundColor: Color(0xffEAB543),
+        title: Text(
+          "Gromnom",
+          style: TextStyle(
+                            color: Color(0xfff5f5f5),
+                            fontSize: 22,
+                            fontFamily: 'SFDisplay',
+                            fontWeight: FontWeight.w500,
+                          ),
+              ),
         actions: <Widget>[
           FloatingActionButton(
+            backgroundColor: Color(0xffEAB543),
             elevation: 0,
-            child: Icon(Icons.arrow_back),
+            child: Icon(Icons.power_settings_new, color: Color(0xfff5f5f5)),
             heroTag: "logout",
             onPressed: () => _signOut(),
           )
@@ -83,8 +93,8 @@ class _BuildAppState extends State<BuildApp> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         //type: BottomNavigationBarType.shifting,
-        backgroundColor: Colors.yellow,
-        fixedColor: Colors.blueGrey[800],
+        backgroundColor: Color(0xffEAB543),
+        fixedColor: Color(0xfff5f5f5),
         currentIndex: currentTab,
         onTap: (int index) {
           bottomTapped(index);
