@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gromnombeta/podoRest.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 
 
-class UserArguments {
+class RestArguments {
   final FirebaseUser user;
-  UserArguments(this.user);
+  final RestaurantInfo restaurantInfo;
+  RestArguments(this.user, this.restaurantInfo);
 }
 
 class HostAMeal extends StatefulWidget {
@@ -38,7 +40,7 @@ class HostAMealState extends State<HostAMeal> {
 
   @override
   Widget build(BuildContext context) {
-    final UserArguments args = ModalRoute.of(context).settings.arguments;
+    final RestArguments args = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
       appBar: AppBar(
