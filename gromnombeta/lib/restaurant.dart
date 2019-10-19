@@ -25,7 +25,7 @@ class RestaurantState extends State<Restaurant> {
 
   Future _getRestaurants() async {
     var url =
-        "http://192.168.0.103:8080/fetchrestaurants/?pincode=835215&address=%20Mesra";
+        "http://192.168.43.47:8080/fetchrestaurants/?pincode=835215&address=%20Mesra";
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
