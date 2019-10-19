@@ -15,48 +15,78 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  ScrollController _controller = new ScrollController();
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      scrollDirection: Axis.vertical,
-      children: <Widget>[
-        Container(
-          width: 280,
-          child: Text(
-            "Currrently Hosted Orders",
-            style: TextStyle(color: Colors.grey, fontSize: 30),
-          ),
-          margin: EdgeInsets.only(left: 10, top: 15),
-        ),
-        Container(
-            child: new StreamBuilder(
-                stream: Firestore.instance.collection('orders').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Text("No orders hosted currently.");
-                  } else {
-                    return ListView.builder(
-                      itemCount: snapshot
-                          .data.documents.length, //snapshot.data.length,
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        DocumentSnapshot ds = snapshot.data.documents[index];
-                        Map combo = ds['items'];
-                        String time = ds.data['scheduledtime'];
-                        String dname = ds.documentID;
+    return Container(
+      color: Color(0xffecf0f1),
+      child: Column(
+        children: <Widget>[
+          //Filter(),
+          Expanded(
+            child: ListView(
+              //scrollDirection: Axis.vertical,
+              children: <Widget>[
+                Container(
+                  width: 280,
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Text(
+                      "Currently Hosted",
+                      style: TextStyle(
+                          color: Color(0xff34495e),
+                          fontSize: 30,
+                          fontFamily: 'SFDisplay',
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  margin: EdgeInsets.only(left: 10, top: 15),
+                ),
+                Container(
+                    child: new StreamBuilder(
+                        stream:
+                            Firestore.instance.collection('orders').snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                                child: Text(
+                              "No Orders Hosted Currently.",
+                              style: TextStyle(
+                                  color: Color(0xfff5f5f5),
+                                  fontSize: 25,
+                                  fontFamily: 'SFDisplay',
+                                  fontWeight: FontWeight.w500),
+                            ));
+                          } else {
+                            return ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              controller: _controller,
+                              itemCount: snapshot.data.documents
+                                  .length, //snapshot.data.length,
+                              //scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext context, int index) {
+                                DocumentSnapshot ds =
+                                    snapshot.data.documents[index];
+                                Map combo = ds['items'];
+                                String time = ds.data['scheduledtime'];
+                                String dname = ds.documentID;
 
-                        return Container(
-                          //height: ds['items'].length.toDouble(),
-                          //child: Card(child: Text('${ds['host']} \n ${combo['items'].length}')),
-                          child: OneCard2(combo,time,dname),
-                          //child: Text("${ds.documentID}"),
-                        );
-                      },
-                    );
-                  }
-                }))
-      ],
+                                return Container(
+                                  //height: ds['items'].length.toDouble(),
+                                  //child: Card(child: Text('${ds['host']} \n ${combo['items'].length}')),
+                                  child: OneCard2(combo, time, dname),
+                                  //child: Text("${ds.documentID}"),
+                                );
+                              },
+                            );
+                          }
+                        }))
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -74,46 +104,91 @@ class OneCard2 extends StatefulWidget {
 class _OneCard2State extends State<OneCard2> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: (50 * widget.combo['items'].length + 140).toDouble(),
-      margin: EdgeInsets.only(top: 30),
-      padding: EdgeInsets.only(left: 20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40), color: Color(0xffEAB543)),
-      child: Column(
-        children: <Widget>[
-          Card(
-              elevation: 0,
-              color: Colors.transparent,
-              child: Column(children: <Widget>[
-                ListView.builder(
-                  itemCount: widget.combo['items'].length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 25,
-                        ),
-                        OneItem2(widget.combo, index),
-                        //Text('${widget.combo.length}')
-                      ],
-                    );
-                  },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: (50 * widget.combo['items'].length + 140).toDouble(),
+        margin: EdgeInsets.only(top: 5, left: 5, right: 5),
+        padding: EdgeInsets.only(left: 20),
+        decoration: BoxDecoration(
+            boxShadow: [
+              new BoxShadow(
+                  color: Color(0xff7f8c8d),
+                  offset: new Offset(0.0, 8.0),
+                  blurRadius: 8.0,
+                  spreadRadius: -5.0)
+            ],
+            borderRadius: BorderRadius.circular(20),
+            //border: Border.all(color: Color(0xff7f8c8d),width: 3),
+            color: Color(0xfff5f5f5)),
+        child: Column(
+          children: <Widget>[
+            Card(
+                elevation: 0,
+                color: Colors.transparent,
+                child: Column(children: <Widget>[
+                  ListView.builder(
+                    itemCount: widget.combo['items'].length,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 30,
+                          ),
+                          OneItem2(widget.combo, index),
+                          //Text('${widget.combo.length}')
+                        ],
+                      );
+                    },
+                  ),
+                ]
+                    //child: Text('${widget.combo['items'].length}'),
+                    )),
+            Container(
+              child: Align(
+                alignment: Alignment(-1, 0),
+                child: Text(
+                  'Scheduled at :\n ${widget.time}',
+                  style: TextStyle(
+                    color: Color(0xff34495e),
+                    fontSize: 15,
+                    fontFamily: 'SFDisplay',
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ]
-                  //child: Text('${widget.combo['items'].length}'),
-                  )),
-           Container(
-             child: Text('Scheduled at : ${widget.time}'),
-             margin: EdgeInsets.only(top: 20),),
-             FloatingActionButton(
-               child: Text('Join'),
-               heroTag: '${widget.dname}',
-               onPressed: (){},
-             )
-        ],
+              ),
+              margin: EdgeInsets.only(top: 20),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0, right: 10),
+              child: Align(
+                alignment: Alignment(0.9, 0.0),
+                child: Material(
+                  child: MaterialButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(.0),
+                      //side: BorderSide(color: Colors.red)
+                    ),
+                    color: Color(0xff3498db),
+                    child: Text(
+                      'JOIN',
+                      style: TextStyle(
+                        color: Color(0xfff5f5f5),
+                        fontSize: 15,
+                        letterSpacing: 1.5,
+                        fontFamily: 'SFDisplay',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -146,15 +221,28 @@ class OneItem2State extends State<OneItem2> {
     return Stack(
       children: <Widget>[
         Align(
-          child: Text(widget.combo['items'][widget.index]['item'].toString()),
+          child: Text(
+            widget.combo['items'][widget.index]['item'].toString(),
+            style: TextStyle(
+                color: Color(0xff34495e),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),
+          ),
           alignment: Alignment(-1, 0),
         ),
         Align(
             child:
-                Text(widget.combo['items'][widget.index]['price'].toString()),
+                Text('₹${widget.combo['items'][widget.index]['price'].toString()}',
+                style: TextStyle(
+                color: Color(0xff34495e),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),
+                ),
             alignment: Alignment(0.2, 0)),
         Align(
-            child: Bool(widget.combo['items'][widget.index]['boolValue']),
+            child: Bool(widget.combo['items'][widget.index]['boolValue'],),
             alignment: Alignment(0.6, 0))
       ],
     );
@@ -164,8 +252,18 @@ class OneItem2State extends State<OneItem2> {
 
 Widget Bool(bool val) {
   if (val) {
-    return Text("taken");
+    return Text("taken",
+    style: TextStyle(
+                color: Color(0xff7f8c8d),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),);
   } else {
-    return Text("Available");
+    return Text("Available",
+    style: TextStyle(
+                color: Color(0xff2ecc71),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),);
   }
 }
