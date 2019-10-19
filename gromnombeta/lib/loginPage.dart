@@ -159,6 +159,11 @@ class _LoginPageState extends State<LoginPage> {
       new Center(
           child: Column(
                       children:<Widget>[
+                        //  CircleAvatar(
+                        //    backgroundImage: AssetImage('assets/draftLogo.png'),
+                        //    backgroundColor: Colors.transparent,
+                        //    radius: 50,
+                        //  ),
                         Text(
                           " Welcome to",
                           style: TextStyle(
@@ -305,6 +310,7 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           body: SingleChildScrollView(
             child: new Container(
+              height: 1080,
                 color: Color(0xffecf0f1),
                 /**So that they dont go to the end and have a padding around them
              * Applies to all the children of this particular container.
