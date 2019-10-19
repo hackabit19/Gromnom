@@ -1,5 +1,3 @@
-![draftLogo](https://user-images.githubusercontent.com/30192068/67145190-ee661c00-f29c-11e9-96db-aa89dc0fff42.png)
-
 # Gromnom
 
 > A food pooling app bringing foodies together.
