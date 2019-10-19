@@ -67,7 +67,7 @@ class HostAMealState extends State<HostAMeal> {
                   SizedBox(
                     height: 5,
                   ),
-                  OneCard(combo),
+                  OneCard(combo, args.user),
                   Divider(
                     color: Colors.orange,
                     height: 5,
@@ -85,8 +85,9 @@ class HostAMealState extends State<HostAMeal> {
 }
 
 class OneCard extends StatefulWidget {
-  OneCard(this.combo);
+  OneCard(this.combo, this.user);
   final Combo combo;
+  final FirebaseUser user;
   @override
   _OneCardState createState() => _OneCardState();
 }
@@ -108,13 +109,16 @@ class _OneCardState extends State<OneCard> {
               itemCount: widget.combo.items.length,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
-                return Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 25,
-                    ),
-                    OneItem(widget.combo, index),
-                  ],
+                return GestureDetector(
+                  onTap: () {},
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 25,
+                      ),
+                      OneItem(widget.combo, index),
+                    ],
+                  ),
                 );
               },
             ),
@@ -132,7 +136,6 @@ class OneItem extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => OneItemState();
 }
-
 
 //This class returns one item or one row of the class
 class OneItemState extends State<OneItem> {
