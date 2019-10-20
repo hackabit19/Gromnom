@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,14 +9,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'podoItems.dart';
 import 'podoRest.dart';
 
-
 typedef IntCallback = Function(int number);
 typedef ListCallback = Function(Combo chosenCombo);
 
 class MealArguments2 {
   final Combo combo;
   final FirebaseUser user;
-    final RestaurantInfo restaurantInfo;
+  final RestaurantInfo restaurantInfo;
 
   MealArguments2(this.combo, this.user, this.restaurantInfo);
 }
@@ -90,135 +88,170 @@ class _HostAMealPreviewState extends State<HostAMealPreview> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:  Color(0xffEAB543),
-        title: Text('Order from ${args.restaurantInfo.name}',
-        style: TextStyle(
+        backgroundColor: Color(0xffEAB543),
+        title: Text(
+          'Confirm Your Order',
+          style: TextStyle(
             color: Color(0xfff5f5f5),
-            fontSize: 18,
+            fontSize: 22,
             fontFamily: 'SFDisplay',
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
           ),
-          ),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SizedBox(
-            height: 20,
-          ),
-
-          ViewCard(args.combo, _changeprice, _getData),
-
-          SizedBox(
-            height: 20,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ViewCard(args.combo, _changeprice, _getData),
           ),
 
           //This is the container which contains cart price and buttons
-          Container(
-            padding: EdgeInsets.only(top: 15),
-            height: 180,
-            decoration: BoxDecoration(
-                color:  Color(0xffEAB543), borderRadius: BorderRadius.circular(20)),
-            child: Card(
-                elevation: 0,
-                color: Colors.transparent,
-                child: Column(children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("Cart price : $price"),
-                      SizedBox(
-                        width: 75,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Color(0xffEAB543)),
-                        child: RaisedButton(
-                          onPressed: () {
-                            if (finalCombo != null) {
-                              //print('${finalCombo.items[1].boolValue}');
-                              var itemCount = finalCombo.items.length;
-                              for (var i = 0; i < itemCount; i++) {
-                                print('${finalCombo.items[i].boolValue}');
-                              }
-
-                              var docName = randomAlpha(20);
-                              List<Items2> items2 = [];
-                              for (var u in finalCombo.items) {
-                                if (u.boolValue) {
-                                  items2.add(Items2(
-                                      item: u.item,
-                                      price: u.price,
-                                      boolValue: u.boolValue,
-                                      user: args.user.email));
-                                } else {
-                                  items2.add(Items2(
-                                      item: u.item,
-                                      price: u.price,
-                                      boolValue: u.boolValue));
-                                }
-                                //print(u.toJson());
-                              }
-
-                              Combo2 combo2 = Combo2(items: items2);
-                              List users = [];
-                              users.add(args.user.email);
-
-                              Firestore.instance
-                                  .collection('orders')
-                                  .document('$docName')
-                                  .setData({
-                                'currentlyhosted': true,
-                                'restaurant': args.restaurantInfo.name,
-                                'host': "${args.user.email}",
-                                'totalitems': finalCombo.items.length,
-                                'items': combo2.toJson(),
-                                'scheduledtime':
-                                    "${_time.hour}:${_time.minute} on ${_date.day}/${_date.month}/${_date.year}"
-                              });
-                              print(finalCombo.toJson());
-                              print(combo2.toJson());
-                              Firestore.instance.collection('chatgroups').document('${docName}').setData(
-                                {
-                                  'users' : users,
-                                  'orderid' : docName,
-                                  'host' : args.user.email
-                                }
-                              );
-                            }
-                          },
-                          child: Text("Host this order"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              //margin: EdgeInsets.only(left: 5, right: 5,bottom: 8),
+              alignment: Alignment(0.0, -1.0),
+              padding: EdgeInsets.only(top: 15),
+              height: 180,
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    new BoxShadow(
+                        color: Color(0xff7f8c8d),
+                        offset: new Offset(0.0, 0.0),
+                        blurRadius: 8.0,
+                        spreadRadius: -5.0)
+                  ],
+                  color: Color(0xfff5f5f5),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: Column(children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          "Cart price : $price",
+                          style: TextStyle(
+                              color: Color(0xff34495e),
+                              fontSize: 15,
+                              fontFamily: 'SFDisplay',
+                              fontWeight: FontWeight.w600),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                          "Selected Date : ${_date.day.toString()}/${_date.month.toString()}/${_date.year.toString()}"),
-                      RaisedButton(
-                        child: Text("Select Date"),
-                        onPressed: () {
-                          _selectDate(context);
-                          print('_date');
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                          "Selected Time : ${_time.hour.toString()}:${_time.minute.toString()}"),
-                      RaisedButton(
-                        child: Text("Select Time"),
-                        onPressed: () {
-                          _selectTime(context);
-                          print('${_time.hour}');
-                        },
-                      ),
-                    ],
-                  ),
-                ])),
+                        SizedBox(
+                          width: 75,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 30),
+                          // decoration: BoxDecoration(
+                          //     borderRadius: BorderRadius.circular(25),
+                          //     color: Color(0xffEAB543)),
+                          //alignment: Alignment(-1, 0),
+                          child: RaisedButton(
+                            color: Color(0xff3498db),
+                            onPressed: () {
+                              if (finalCombo != null) {
+                                //print('${finalCombo.items[1].boolValue}');
+                                var itemCount = finalCombo.items.length;
+                                for (var i = 0; i < itemCount; i++) {
+                                  print('${finalCombo.items[i].boolValue}');
+                                }
+
+                                var docName = randomAlpha(20);
+                                List<Items2> items2 = [];
+                                for (var u in finalCombo.items) {
+                                  if (u.boolValue) {
+                                    items2.add(Items2(
+                                        item: u.item,
+                                        price: u.price,
+                                        boolValue: u.boolValue,
+                                        user: args.user.email));
+                                  } else {
+                                    items2.add(Items2(
+                                        item: u.item,
+                                        price: u.price,
+                                        boolValue: u.boolValue));
+                                  }
+                                  //print(u.toJson());
+                                }
+
+                                Combo2 combo2 = Combo2(items: items2);
+                                List users = [];
+                                users.add(args.user.email);
+
+                                Firestore.instance
+                                    .collection('orders')
+                                    .document('$docName')
+                                    .setData({
+                                  'currentlyhosted': true,
+                                  'restaurant': args.restaurantInfo.name,
+                                  'host': "${args.user.email}",
+                                  'totalitems': finalCombo.items.length,
+                                  'items': combo2.toJson(),
+                                  'scheduledtime':
+                                      "${_time.hour}:${_time.minute} on ${_date.day}/${_date.month}/${_date.year}"
+                                });
+                                print(finalCombo.toJson());
+                                print(combo2.toJson());
+                                Firestore.instance
+                                    .collection('chatgroups')
+                                    .document('${docName}')
+                                    .setData({
+                                  'users': users,
+                                  'orderid': docName,
+                                  'host': args.user.email
+                                });
+                              }
+                            },
+                            child: Text(
+                              "Host this order",
+                              style: TextStyle(
+                                color: Color(0xfff5f5f5),
+                                fontSize: 15,
+                                //letterSpacing: 1.5,
+                                fontFamily: 'SFDisplay',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                            "Selected Date : ${_date.day.toString()}/${_date.month.toString()}/${_date.year.toString()}"),
+                        Container(
+                          child: RaisedButton(
+                            child: Text("Select Date"),
+                            onPressed: () {
+                              _selectDate(context);
+                              print('_date');
+                            },
+                          ),
+                          margin: EdgeInsets.only(left: 42)
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                            "Selected Time : ${_time.hour.toString()}:${_time.minute.toString()}"),
+                        Container(
+                          child: RaisedButton(
+                            child: Text("Select Time"),
+                            onPressed: () {
+                              _selectTime(context);
+                              print('${_time.hour}');
+                            },
+                          ),
+                          margin: EdgeInsets.only(left: 82)
+                        ),
+                      ],
+                    ),
+                  ])),
+            ),
           ),
         ],
       ),
@@ -244,7 +277,7 @@ class _ViewCardState extends State<ViewCard> {
       height: (50 * widget.combo.items.length + 125).toDouble(),
       padding: EdgeInsets.only(left: 20),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40), color:  Color(0xffEAB543)),
+          borderRadius: BorderRadius.circular(10), color: Color(0xffEAB543)),
       child: Card(
           elevation: 0,
           color: Colors.transparent,
@@ -300,24 +333,27 @@ class OneItemState extends State<OneItem> {
     return Stack(
       children: <Widget>[
         Align(
-          child: Text(widget.combo.items[widget.index].item,
-          style: TextStyle(
-            color: Color(0xfff5f5f5),
-            fontSize: 18,
-            fontFamily: 'SFDisplay',
-            fontWeight: FontWeight.w400,
-          ),),
+          child: Text(
+            widget.combo.items[widget.index].item,
+            style: TextStyle(
+              color: Color(0xfff5f5f5),
+              fontSize: 18,
+              fontFamily: 'SFDisplay',
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           alignment: Alignment(-1, 0),
         ),
         Align(
-            child: Text(widget.combo.items[widget.index].price.toString(),
-            style: TextStyle(
-            color: Color(0xfff5f5f5),
-            fontSize: 18,
-            fontFamily: 'SFDisplay',
-            fontWeight: FontWeight.w400,
-          ),
-          ),
+            child: Text(
+              widget.combo.items[widget.index].price.toString(),
+              style: TextStyle(
+                color: Color(0xfff5f5f5),
+                fontSize: 18,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w400,
+              ),
+            ),
             alignment: Alignment(0.1, 0)),
         Align(
             child: Checkbox(

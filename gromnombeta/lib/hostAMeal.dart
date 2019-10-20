@@ -66,16 +66,7 @@ class HostAMealState extends State<HostAMeal> {
 
               return Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 5,
-                  ),
                   OneCard(combo, args.user, args.restaurantInfo),
-                  Divider(
-                    color: Colors.orange,
-                    height: 5,
-                    indent: 35,
-                    endIndent: 35,
-                  )
                 ],
               );
             },
@@ -100,10 +91,19 @@ class _OneCardState extends State<OneCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 5, left: 5, right: 5,bottom: 8),
       height: (50 * widget.combo.items.length + 25).toDouble(),
-      padding: EdgeInsets.only(left: 20),
+      padding: EdgeInsets.only(top: 15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40), color: Color(0xffEAB543)),
+          boxShadow: [
+            new BoxShadow(
+                color: Color(0xff7f8c8d),
+                offset: new Offset(0.0, 0.0),
+                blurRadius: 8.0,
+                spreadRadius: -5.0)
+          ],
+          color: Color(0xfff5f5f5),
+          borderRadius: BorderRadius.circular(10)),
       child: Card(
           elevation: 0,
           color: Colors.transparent,
@@ -164,30 +164,28 @@ class OneItemState extends State<OneItem> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Stack(
       children: <Widget>[
         Align(
           child: Text(
             widget.combo.items[widget.index].item.toString(),
             style: TextStyle(
-              color: Color(0xfff5f5f5),
-              fontSize: 18,
-              fontFamily: 'SFDisplay',
-              fontWeight: FontWeight.w400,
-            ),
+                color: Color(0xff34495e),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),
           ),
-          alignment: Alignment(-1, 0),
+          alignment: Alignment(-0.8, 0),
         ),
         Align(
-            child: Text(widget.combo.items[widget.index].price.toString(),
+            child: Text('₹${widget.combo.items[widget.index].price.toString()}',
                 style: TextStyle(
-                  color: Color(0xfff5f5f5),
-                  fontSize: 18,
-                  fontFamily: 'SFDisplay',
-                  fontWeight: FontWeight.w400,
-                )),
-            alignment: Alignment(0.3, 0)),
+                color: Color(0xff34495e),
+                fontSize: 15,
+                fontFamily: 'SFDisplay',
+                fontWeight: FontWeight.w600),
+                ),
+            alignment: Alignment(0.4, 0)),
       ],
     );
   }

@@ -97,18 +97,45 @@ class OneRestState extends State<OneRest> {
             arguments: RestArguments(widget.user, widget.restaurantInfo));
       },
       child: Container(
-        height: 80,
-        margin: EdgeInsets.only(top: 10),
+        height: 100,
+        margin: EdgeInsets.only(top: 5, left: 5, right: 5,bottom: 8),
         padding: EdgeInsets.only(top: 15),
         decoration: BoxDecoration(
-          color: Color(0xffEAB543),
-          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            new BoxShadow(
+                color: Color(0xff7f8c8d),
+                offset: new Offset(0.0, 0.0),
+                blurRadius: 8.0,
+                spreadRadius: -5.0)
+          ],
+          color: Color(0xfff5f5f5),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           children: <Widget>[
-            Text('${widget.restaurantInfo.name}'),
-            Text('Rating : ${widget.restaurantInfo.rating}'),
-            Text('Cost for two : ${widget.restaurantInfo.costfortwo}')
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0, top: 6.0),
+              child: Align(
+                  alignment: Alignment(-0.85, 0.0),
+                  child: Text('${widget.restaurantInfo.name}',
+                      style: TextStyle(
+                        color: Color(0xff34495e),
+                        fontSize: 20,
+                        fontFamily: 'SFDisplay',
+                        fontWeight: FontWeight.w500,
+                      ))),
+            ),
+            Align(
+              alignment: Alignment(-0.8, 0.0),
+              child: Text(
+                  'Cost for two : ${widget.restaurantInfo.costfortwo}|Rating : ${widget.restaurantInfo.rating}',
+                  style: TextStyle(
+                    color: Color(0xff34495e),
+                    fontSize: 16,
+                    fontFamily: 'SFDisplay',
+                    fontWeight: FontWeight.w200,
+                  )),
+            ),
             //SizedBox(height: 30,)
           ],
         ),
